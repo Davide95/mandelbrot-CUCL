@@ -2,9 +2,6 @@
 #include <fstream>
 #include <complex>
 
-// Uncomment this if you want to use in production
-#define DEBUG
-
 // Ranges of the set
 #define MIN_X -2
 #define MAX_X 1
@@ -49,20 +46,21 @@ int main(int argc, char **argv) {
         }
     }
 
-#ifdef DEBUG
+
+    // Write the result to a file
+    ofstream matrix_out;
+
     if(argc < 2) {
         cout << "Please specify the output file as a parameter." << endl;
         return -1;
     }
 
-    ofstream matrix_out;
     matrix_out.open(argv[1], ios::trunc);
     if(!matrix_out.is_open()) {
         cout << "Unable to open file." << endl;
         return -2;
     }
 
-    // Write the result to a file
     for(int row = 0; row < HEIGHT; row++) {
         for(int col = 0; col < WIDTH; col++) {
             matrix_out << image[row * WIDTH + col];
@@ -73,9 +71,8 @@ int main(int argc, char **argv) {
         if(row < HEIGHT - 1)
             matrix_out << endl;
     }
-
     matrix_out.close();
-#endif
+    
 
     delete []image;
     return 0;
