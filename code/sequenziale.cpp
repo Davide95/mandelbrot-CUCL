@@ -2,24 +2,28 @@
 #include <fstream>
 #include <complex>
 
+// Uncomment this if you want to use in production
 #define DEBUG
 
+// Ranges of the set
 #define MIN_X -2
 #define MAX_X 1
 #define MIN_Y -1
 #define MAX_Y 1
 
+// Image ratio
 #define RATIO_X (MAX_X - MIN_X)
 #define RATIO_Y (MAX_Y - MIN_Y)
 
+// Image size
 #define RESOLUTION 10
 #define WIDTH (RATIO_X * RESOLUTION)
 #define HEIGHT (RATIO_Y * RESOLUTION)
 
 #define STEP ((double)RATIO_X / WIDTH)
 
-#define DEGREE 2
-#define ITERATIONS 1000
+#define DEGREE 2 // Degree of the polynomial
+#define ITERATIONS 1000 // Maximum number of iterations
 
 using namespace std;
 
@@ -58,6 +62,7 @@ int main(int argc, char **argv) {
         return -2;
     }
 
+    // Write the result to a file
     for(int row = 0; row < HEIGHT; row++) {
         for(int col = 0; col < WIDTH; col++) {
             matrix_out << image[row][col];
