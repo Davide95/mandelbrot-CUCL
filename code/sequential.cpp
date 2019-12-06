@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <complex>
+#include <chrono>
 
 // Ranges of the set
 #define MIN_X -2
@@ -27,6 +28,7 @@ using namespace std;
 int main(int argc, char **argv) {
     int *image = new int[HEIGHT * WIDTH];
 
+    auto start = chrono::steady_clock::now();
     for(int row = 0; row < HEIGHT; row++) {
         for(int col = 0; col < WIDTH; col++) {
             image[row * WIDTH + col] = 0;
@@ -45,6 +47,10 @@ int main(int argc, char **argv) {
             }
         }
     }
+    auto end = chrono::steady_clock::now();
+    cout << "Time elapsed: " 
+         << chrono::duration_cast<chrono::seconds>(end - start).count()
+         << " seconds." << endl;
 
 
     // Write the result to a file
@@ -72,7 +78,7 @@ int main(int argc, char **argv) {
             matrix_out << endl;
     }
     matrix_out.close();
-    
+
 
     delete []image;
     return 0;
