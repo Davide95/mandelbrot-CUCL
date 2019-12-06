@@ -1,6 +1,6 @@
 #include <iostream>
+#include <fstream>
 #include <complex>
-#include <SFML/Graphics.hpp>
 
 #define DEBUG
 
@@ -23,7 +23,7 @@
 
 using namespace std;
 
-int main() {
+int main(int argc, char **argv) {
     int image[HEIGHT][WIDTH];
 
     for(int row = 0; row < HEIGHT; row++) {
@@ -46,12 +46,30 @@ int main() {
     }
 
 #ifdef DEBUG
+    if(argc < 2) {
+        cout << "Please specify the output file as a parameter." << endl;
+        return -1;
+    }
+
+    ofstream matrix_out;
+    matrix_out.open(argv[1], ios::trunc);
+    if(!matrix_out.is_open()) {
+        cout << "Unable to open file." << endl;
+        return -2;
+    }
+
     for(int row = 0; row < HEIGHT; row++) {
         for(int col = 0; col < WIDTH; col++) {
-            cout << image[row][col] << "\t";
+            matrix_out << image[row][col];
+
+            if(col < WIDTH -1)
+                matrix_out << ',';
         }
-        cout << endl;
+        if(row < HEIGHT - 1)
+            matrix_out << endl;
     }
+
+    matrix_out.close();
 #endif
 
     return 0;
