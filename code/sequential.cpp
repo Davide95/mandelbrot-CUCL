@@ -16,7 +16,7 @@
 #define RATIO_Y (MAX_Y - MIN_Y)
 
 // Image size
-#define RESOLUTION 10
+#define RESOLUTION 1000
 #define WIDTH (RATIO_X * RESOLUTION)
 #define HEIGHT (RATIO_Y * RESOLUTION)
 
@@ -28,11 +28,11 @@
 using namespace std;
 
 int main(int argc, char **argv) {
-    int image[HEIGHT][WIDTH];
+    int *image = new int[HEIGHT * WIDTH];
 
     for(int row = 0; row < HEIGHT; row++) {
         for(int col = 0; col < WIDTH; col++) {
-            image[row][col] = 0;
+            image[row * WIDTH + col] = 0;
 
             // z = z^2 + c
             complex<double> z(0, 0);
@@ -42,7 +42,7 @@ int main(int argc, char **argv) {
 
                 // If it is convergent
                 if(abs(z) >= 2) {
-                    image[row][col] = 1;
+                    image[row * WIDTH + col] = 1;
                     break;
                 }
             }
@@ -65,7 +65,7 @@ int main(int argc, char **argv) {
     // Write the result to a file
     for(int row = 0; row < HEIGHT; row++) {
         for(int col = 0; col < WIDTH; col++) {
-            matrix_out << image[row][col];
+            matrix_out << image[row * WIDTH + col];
 
             if(col < WIDTH -1)
                 matrix_out << ',';
@@ -77,5 +77,6 @@ int main(int argc, char **argv) {
     matrix_out.close();
 #endif
 
+    delete []image;
     return 0;
 }
