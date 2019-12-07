@@ -29,21 +29,22 @@ int main(int argc, char **argv) {
     int *image = new int[HEIGHT * WIDTH];
 
     auto start = chrono::steady_clock::now();
-    for(int row = 0; row < HEIGHT; row++) {
-        for(int col = 0; col < WIDTH; col++) {
-            image[row * WIDTH + col] = 1;
+    for(int pos = 0; pos < HEIGHT * WIDTH; pos++) {
+        const int row = pos / WIDTH;
+        const int col = pos % WIDTH;
 
-            // z = z^2 + c
-            complex<double> z(0, 0);
-            complex<double> c(col * STEP + MIN_X, row * STEP + MIN_Y);
-            for(int i = 0; i < ITERATIONS; i++) {
-                z = pow(z, 2) + c;
+        image[pos] = 1;
 
-                // If it is convergent
-                if(abs(z) >= 2) {
-                    image[row * WIDTH + col] = 0;
-                    break;
-                }
+        // z = z^2 + c
+        complex<double> z(0, 0);
+        complex<double> c(col * STEP + MIN_X, row * STEP + MIN_Y);
+        for(int i = 0; i < ITERATIONS; i++) {
+            z = pow(z, 2) + c;
+
+            // If it is convergent
+            if(abs(z) >= 2) {
+                image[pos] = 0;
+                break;
             }
         }
     }
