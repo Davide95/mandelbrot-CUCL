@@ -31,7 +31,7 @@ int main(int argc, char **argv) {
     auto start = chrono::steady_clock::now();
     for(int row = 0; row < HEIGHT; row++) {
         for(int col = 0; col < WIDTH; col++) {
-            image[row * WIDTH + col] = 0;
+            image[row * WIDTH + col] = 1;
 
             // z = z^2 + c
             complex<double> z(0, 0);
@@ -41,7 +41,7 @@ int main(int argc, char **argv) {
 
                 // If it is convergent
                 if(abs(z) >= 2) {
-                    image[row * WIDTH + col] = 1;
+                    image[row * WIDTH + col] = 0;
                     break;
                 }
             }
