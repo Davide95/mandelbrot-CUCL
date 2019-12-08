@@ -1,6 +1,6 @@
-import sys
-import logging
+import sys, logging, warnings
 import pandas as pd
+import matplotlib as mpl
 import matplotlib.pyplot as plt
 import numpy as np
 import math
@@ -11,12 +11,11 @@ if len(sys.argv) < 2:
 
 data = pd.read_csv(sys.argv[1], header=None, index_col=False).to_numpy()
 
-rgb_image = np.zeros((data.shape[0], data.shape[1], 3), dtype=np.uint8)
+# If np.log(0), it won't color the pixel. That's great.
+with warnings.catch_warnings():
+    warnings.simplefilter('ignore')
+    data = np.log(data / np.max(data))
 
-rgb_image[:, :, 0] = data*data % 255
-rgb_image[:, :, 1] = data*data % 255
-rgb_image[:, :, 2] = data % 255
-
-plt.imshow(rgb_image)
+plt.imshow(data, cmap='gist_rainbow')
 plt.axis('off')
 plt.show()
