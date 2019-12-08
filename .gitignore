@@ -33,3 +33,6 @@
 
 # Output of the computation
 *.csv
+
+# Project configs
+*/.vscode/*
