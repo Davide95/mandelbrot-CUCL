@@ -40,7 +40,7 @@ int main(int argc, char **argv)
 
         // z = z^2 + c
         complex<double> z(0, 0);
-        for (int i = 0; i < ITERATIONS; i++)
+        for (int i = 1; i <= ITERATIONS; i++)
         {
             z = pow(z, 2) + c;
 
