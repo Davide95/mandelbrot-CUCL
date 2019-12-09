@@ -6,7 +6,7 @@ import numpy as np
 import math
 
 if len(sys.argv) < 2:
-    logging.critical('Please specify the output file as a parameter.')
+    logging.critical('Please specify the input file as a parameter.')
     exit(-1)
 
 data = pd.read_csv(sys.argv[1], header=None, index_col=False).to_numpy()
