@@ -37,8 +37,6 @@ int main(int argc, char **argv)
 #pragma omp parallel for default(none) shared(image) schedule(dynamic)
     for (int pos = 0; pos < HEIGHT * WIDTH; pos++)
     {
-        image[pos] = 0;
-
         const int row = pos / WIDTH;
         const int col = pos % WIDTH;
         const complex<double> c(col * STEP + MIN_X, row * STEP + MIN_Y);
@@ -58,6 +56,7 @@ int main(int argc, char **argv)
         }
     }
     const auto end = chrono::steady_clock::now();
+
     cout << "Time elapsed: "
          << chrono::duration_cast<chrono::seconds>(end - start).count()
          << " seconds." << endl;
