@@ -1,7 +1,6 @@
 #include <iostream>
 #include <fstream>
 #include <complex>
-#include <chrono>
 #include <mpi.h>
 
 // Ranges of the set
@@ -49,7 +48,7 @@ int main(int argc, char **argv)
     int slice_size = HEIGHT * WIDTH / nproc;
     int *const image_slice = new int[slice_size];
 
-    const auto start = chrono::steady_clock::now();
+    double start = MPI_Wtime();
     
     for (int pos = 0; pos < slice_size; pos++)
         image_slice[pos] = 0;
@@ -79,13 +78,13 @@ int main(int argc, char **argv)
     }
 
     MPI_Gather(image_slice, slice_size, MPI_INT, image, slice_size, MPI_INT, MASTER, MPI_COMM_WORLD);
-    const auto end = chrono::steady_clock::now();
+    double end = MPI_Wtime();
     
     delete []image_slice;
 
     if (myid == MASTER) {
         cout << "Time elapsed: "
-             << chrono::duration_cast<chrono::seconds>(end - start).count()
+             << (int)(end - start)
              << " seconds." << endl;
 
         // Write the result to a file
