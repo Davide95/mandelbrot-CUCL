@@ -36,8 +36,8 @@ __global__ void computePixel(int* image)
 	const int col = blockIdx.x * blockDim.x + threadIdx.x;
 
 	if (row < HEIGHT && col < WIDTH) {
-		double c_real = col * STEP + MIN_X;
-		double c_im = row * STEP + MIN_Y;
+		const double c_real = col * STEP + MIN_X;
+		const double c_im = row * STEP + MIN_Y;
 
 		// z = z^2 + c
 		double z_real = 0, z_im = 0;		
