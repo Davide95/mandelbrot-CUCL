@@ -1,4 +1,6 @@
-import sys, logging, warnings
+import sys
+import logging
+import warnings
 import pandas as pd
 import matplotlib as mpl
 import matplotlib.pyplot as plt
