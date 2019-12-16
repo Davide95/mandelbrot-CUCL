@@ -30,93 +30,93 @@
 
 using namespace std;
 
-__global__ void computePixel(int* image)
+__global__ void computePixel(int *image)
 {
-	const int row = blockIdx.y * blockDim.y + threadIdx.y;
-	const int col = blockIdx.x * blockDim.x + threadIdx.x;
+    const int row = blockIdx.y * blockDim.y + threadIdx.y;
+    const int col = blockIdx.x * blockDim.x + threadIdx.x;
 
-	if (row < HEIGHT && col < WIDTH) {
-		const double c_real = col * STEP + MIN_X;
-		const double c_im = row * STEP + MIN_Y;
+    if (row < HEIGHT && col < WIDTH)
+    {
+        const double c_real = col * STEP + MIN_X;
+        const double c_im = row * STEP + MIN_Y;
 
-		// z = z^2 + c
-		double z_real = 0, z_im = 0;		
-		for (int i = 1; i <= ITERATIONS; i++)
-		{
-			double tmp = (z_real * z_real - z_im * z_im) + c_real;
-			z_im = (2 * z_real * z_im) + c_im;
-			z_real = tmp;
+        // z = z^2 + c
+        double z_real = 0, z_im = 0;
+        for (int i = 1; i <= ITERATIONS; i++)
+        {
+            double tmp = (z_real * z_real - z_im * z_im) + c_real;
+            z_im = (2 * z_real * z_im) + c_im;
+            z_real = tmp;
 
-			// If it is convergent
-			if (z_real * z_real + z_im * z_im >= 4)
-			{
-				image[row * WIDTH + col] = i;
-				return;
-			}
-		}
-	}
+            // If it is convergent
+            if (z_real * z_real + z_im * z_im >= 4)
+            {
+                image[row * WIDTH + col] = i;
+                return;
+            }
+        }
+    }
 }
 
-int main(int argc, char** argv)
+int main(int argc, char **argv)
 {
-	int* const image = new int[HEIGHT * WIDTH];
-	int* image_on_gpu;
-	cudaMalloc(&image_on_gpu, GPU_IMG_SIZE);
+    int *const image = new int[HEIGHT * WIDTH];
+    int *image_on_gpu;
+    cudaMalloc(&image_on_gpu, GPU_IMG_SIZE);
 
-	const dim3 threads(THREADS, THREADS);
-	const int BLOCKS_X = ((WIDTH + threads.x - 1) / threads.x);
-	const int BLOCKS_Y = ((HEIGHT + threads.y - 1) / threads.y);
-	const dim3 blocks(BLOCKS_X, BLOCKS_Y);
+    const dim3 threads(THREADS, THREADS);
+    const int BLOCKS_X = ((WIDTH + threads.x - 1) / threads.x);
+    const int BLOCKS_Y = ((HEIGHT + threads.y - 1) / threads.y);
+    const dim3 blocks(BLOCKS_X, BLOCKS_Y);
 
-	const auto start = chrono::steady_clock::now();
+    const auto start = chrono::steady_clock::now();
 
-	for (int pos = 0; pos < HEIGHT * WIDTH; pos++)
-		image[pos] = 0;
+    for (int pos = 0; pos < HEIGHT * WIDTH; pos++)
+        image[pos] = 0;
 
-	cudaMemcpy(image_on_gpu, image, GPU_IMG_SIZE, cudaMemcpyHostToDevice);
-	computePixel << < blocks, threads >> > (image_on_gpu);
+    cudaMemcpy(image_on_gpu, image, GPU_IMG_SIZE, cudaMemcpyHostToDevice);
+    computePixel<<<blocks, threads>>>(image_on_gpu);
 
-	cudaDeviceSynchronize();
-	const auto end = chrono::steady_clock::now();
+    cudaDeviceSynchronize();
+    const auto end = chrono::steady_clock::now();
 
-	cout << "Time elapsed: "
-		<< chrono::duration_cast<chrono::seconds>(end - start).count()
-		<< " seconds." << endl;
-	
-	cudaMemcpy(image, image_on_gpu, GPU_IMG_SIZE, cudaMemcpyDeviceToHost);
-	cudaFree(image_on_gpu);
+    cout << "Time elapsed: "
+         << chrono::duration_cast<chrono::seconds>(end - start).count()
+         << " seconds." << endl;
 
-	// Write the result to a file
-	ofstream matrix_out;
+    cudaMemcpy(image, image_on_gpu, GPU_IMG_SIZE, cudaMemcpyDeviceToHost);
+    cudaFree(image_on_gpu);
 
-	if (argc < 2)
-	{
-		cout << "Please specify the output file as a parameter." << endl;
-		return -1;
-	}
+    // Write the result to a file
+    ofstream matrix_out;
 
-	matrix_out.open(argv[1], ios::trunc);
-	if (!matrix_out.is_open())
-	{
-		cout << "Unable to open file." << endl;
-		return -2;
-	}
+    if (argc < 2)
+    {
+        cout << "Please specify the output file as a parameter." << endl;
+        return -1;
+    }
 
-	for (int row = 0; row < HEIGHT; row++)
-	{
-		for (int col = 0; col < WIDTH; col++)
-		{
-			matrix_out << image[row * WIDTH + col];
+    matrix_out.open(argv[1], ios::trunc);
+    if (!matrix_out.is_open())
+    {
+        cout << "Unable to open file." << endl;
+        return -2;
+    }
 
-			if (col < WIDTH - 1)
-				matrix_out << ',';
-		}
-		if (row < HEIGHT - 1)
-			matrix_out << endl;
-	}
-	matrix_out.close();
+    for (int row = 0; row < HEIGHT; row++)
+    {
+        for (int col = 0; col < WIDTH; col++)
+        {
+            matrix_out << image[row * WIDTH + col];
 
-	delete[] image; // It's here for coding style, but useless
-	return 0;
+            if (col < WIDTH - 1)
+                matrix_out << ',';
+        }
+        if (row < HEIGHT - 1)
+            matrix_out << endl;
+    }
+    matrix_out.close();
+
+    delete[] image; // It's here for coding style, but useless
+    return 0;
 }
-

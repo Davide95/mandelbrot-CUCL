@@ -29,7 +29,7 @@ using namespace std;
 
 int main(int argc, char **argv)
 {
-    MPI_Init( &argc, &argv );
+    MPI_Init(&argc, &argv);
 
     int nproc, myid;
     MPI_Comm_size(MPI_COMM_WORLD, &nproc);
@@ -39,8 +39,9 @@ int main(int argc, char **argv)
     if (myid == MASTER)
         image = new int[HEIGHT * WIDTH];
 
-    if(HEIGHT * WIDTH % nproc != 0) {
-        if(myid == 0)
+    if (HEIGHT * WIDTH % nproc != 0)
+    {
+        if (myid == 0)
             cout << "It's not possible to split the task in " << nproc << " nodes." << endl;
         MPI_Abort(MPI_COMM_WORLD, -3);
     }
@@ -49,12 +50,12 @@ int main(int argc, char **argv)
     int *const image_slice = new int[slice_size];
 
     double start = MPI_Wtime();
-    
+
     for (int pos = 0; pos < slice_size; pos++)
         image_slice[pos] = 0;
 
     int absolute_start_idx = slice_size * myid;
-    #pragma omp parallel for default(none) shared(image_slice, absolute_start_idx, slice_size) schedule(dynamic)
+#pragma omp parallel for default(none) shared(image_slice, absolute_start_idx, slice_size) schedule(dynamic)
     for (int pos = 0; pos < slice_size; pos++)
     {
         int absolute_idx = absolute_start_idx + pos;
@@ -79,10 +80,11 @@ int main(int argc, char **argv)
 
     MPI_Gather(image_slice, slice_size, MPI_INT, image, slice_size, MPI_INT, MASTER, MPI_COMM_WORLD);
     double end = MPI_Wtime();
-    
-    delete []image_slice;
 
-    if (myid == MASTER) {
+    delete[] image_slice;
+
+    if (myid == MASTER)
+    {
         cout << "Time elapsed: "
              << (int)(end - start)
              << " seconds." << endl;
