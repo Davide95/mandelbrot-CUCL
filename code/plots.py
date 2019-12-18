@@ -121,7 +121,7 @@ data = np.array([[10, 11, 13, 15],
                  [13, 15, 18, 21],
                  [16, 19, 22, 26],
                  [20, 23, 27, 31]])
-xlabels = np.array([12*12, 13*13, 14*14, 15*14])
+xlabels = np.array([12, 13, 14, 15])
 ylabels = np.array([2, 3, 4, 5])
 
 fig, ax = plt.subplots()
