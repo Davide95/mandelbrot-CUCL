@@ -46,7 +46,7 @@ __global__ void computePixel(int *image)
         {
             z = cuCadd(cuCmul(z, z), c);
 
-            // If it is convergent
+            // If it is divergent
             if (cuCabs(z) >= 2)
             {
                 image[row * WIDTH + col] = i;

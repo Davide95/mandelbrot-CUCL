@@ -69,7 +69,7 @@ int main(int argc, char **argv)
         {
             z = pow(z, 2) + c;
 
-            // If it is convergent
+            // If it is divergent
             if (abs(z) >= 2)
             {
                 image_slice[pos] = i;

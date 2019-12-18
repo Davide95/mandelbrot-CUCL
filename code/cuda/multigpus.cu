@@ -52,7 +52,7 @@ __global__ void computePixel(int *image, int dev_id)
             z_im = (2 * z_real * z_im) + c_im;
             z_real = tmp;
 
-            // If it is convergent
+            // If it is divergent
             if (z_real * z_real + z_im * z_im >= 4)
             {
                 image[row * WIDTH + col] = i;
