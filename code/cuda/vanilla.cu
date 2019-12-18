@@ -49,7 +49,7 @@ __global__ void computePixel(int *image)
             z_real = tmp;
 
             // If it is divergent
-            if (z_real * z_real + z_im * z_im >= 4)
+            if (z_real * z_real + z_im * z_im > 4)
             {
                 image[row * WIDTH + col] = i;
                 return;

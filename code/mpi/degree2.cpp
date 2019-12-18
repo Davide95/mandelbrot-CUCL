@@ -72,7 +72,7 @@ int main(int argc, char **argv)
             z_real = tmp;
 
             // If it is divergent
-            if (z_real * z_real + z_im * z_im >= 4)
+            if (z_real * z_real + z_im * z_im > 4)
             {
                 image_slice[pos] = i;
                 break;

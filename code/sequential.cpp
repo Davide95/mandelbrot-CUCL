@@ -45,7 +45,7 @@ int main(int argc, char **argv)
             z = pow(z, 2) + c;
 
             // If it is divergent
-            if (abs(z) >= 2)
+            if (abs(z) > 2)
             {
                 image[pos] = i;
                 break;
